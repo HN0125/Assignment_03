@@ -1,16 +1,78 @@
 #include <iostream>
-
-// Create your own .h/.cpp file for each class (see README.md) and include
-// the headers here as you write them, e.g.:
-// #include "Student.h"
-
+#include "Student.h"
 using namespace std;
 
 // No global variables: each demo creates its own objects locally.
 
-void runQuestion1() {
-    cout << "Q1: Student Registration System - TODO" << endl;
-    // TODO: read students, search by ID, show total registered
+void runQuestion1()
+{
+    int count;
+
+    cout << "Enter the number of students";
+    cin >> count;
+
+    if (count <= 0 || count > 50)
+    {
+        cout << "Invalid number of students" << endl;
+        return;
+    }
+
+    Student* students[50];
+
+    for (int i = 0; i < count; i++)
+    {
+        int id, semester;
+        double cgpa;
+        char name[50];
+
+        cout << "Enter details for Student " << i + 1 << ":" << endl;
+
+        cout << "Student ID ";
+        cin >> id;
+
+        cout << "Name: ";
+         cin >> ws;
+        cin.getline(name, 50);
+
+        cout << "Semester ";
+        cin >> semester;
+
+        cout << "CGPA ";
+        cin >> cgpa;
+
+        students[i] = new Student(id, name, semester, cgpa);
+    }
+
+    int searchID;
+    bool found = false;
+
+    cout << "Enter Student ID to search";
+    cin >> searchID;
+
+    for (int i = 0; i < count; i++)
+    {
+        if (students[i]->getStudentID() == searchID)
+        {
+            cout << "Student Record Found" << endl;
+
+            displayStudent(students[i]);
+
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Student not found" << endl;
+    }
+
+    Student::showTotalStudents();
+
+    for (int i = 0; i < count; i++)
+    {
+        delete students[i];
+    }
 }
 
 void runQuestion2() {
