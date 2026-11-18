@@ -3,6 +3,7 @@
 #include "Student.h"
 #include "Wallet.h"
 #include "Product.h"
+#include "Patient.h"
 using namespace std;
 
 
@@ -340,10 +341,143 @@ void runQuestion3()
 }
 
 
-void runQuestion4() {
-    cout << "Q4: Hospital Billing System - TODO" << endl;
-    // TODO: patients, compareBills, HospitalManager report, operators
+
+void runQuestion4()
+{
+    int count;
+
+    cout << "\nEnter the number of patients: ";
+    cin >> count;
+
+    if (count < 1 || count > 50)
+    {
+        cout << "Invalid number of patients." << endl;
+        return;
+    }
+
+    Patient* patients[50];
+
+    for (int i = 0; i < count; i++)
+    {
+        int id, age, days;
+        char name[50];
+
+        cout << "\nEnter details for Patient " << i + 1 << ":" << endl;
+
+        cout << "Patient ID: ";
+        cin >> id;
+
+        cin.ignore(1000, '\n');
+
+        cout << "Name: ";
+        cin.getline(name, 50);
+
+        cout << "Age: ";
+        cin >> age;
+
+        cout << "Number of treatment days: ";
+        cin >> days;
+
+        if (days < 1 || days > 365)
+        {
+            cout << "Invalid number of days." << endl;
+
+            for (int j = 0; j < i; j++)
+            {
+                delete patients[j];
+            }
+
+            return;
+        }
+
+        double* charges = new double[days];
+
+        cout << "\nEnter daily treatment charges:" << endl;
+
+        for (int j = 0; j < days; j++)
+        {
+            cout << "Day " << j + 1 << ": ";
+            cin >> charges[j];
+        }
+
+        patients[i] = new Patient(id, name, age, days, charges);
+
+        delete[] charges;
+    }
+
+    cout << "\nPatient Billing Report:" << endl;
+
+    for (int i = 0; i < count; i++)
+    {
+        cout << "\nPatient " << i + 1 << ": "
+            << patients[i]->operator[](0) * 0
+            << endl;
+
+        cout << *patients[i];
+    }
+
+    if (count >= 2)
+    {
+        cout << "\nComparing Patient Bills:" << endl;
+
+        compareBills(*patients[0], *patients[1]);
+
+        cout << "\nOperator Demonstration:" << endl;
+
+        cout << "Combined Bill: Rs. "
+            << *patients[0] + *patients[1] << endl;
+
+        if (*patients[0] > *patients[1])
+        {
+            cout << "Patient 1 has a higher bill." << endl;
+        }
+        else
+        {
+            cout << "Patient 1 does not have a higher bill." << endl;
+        }
+
+        if (*patients[0] == *patients[1])
+        {
+            cout << "Both bills are equal." << endl;
+        }
+        else
+        {
+            cout << "Both bills are not equal." << endl;
+        }
+    }
+
+    cout << "\nAccessing Daily Charges:" << endl;
+
+    int patientNumber, dayNumber;
+
+    cout << "Enter patient number: ";
+    cin >> patientNumber;
+
+    cout << "Enter day number: ";
+    cin >> dayNumber;
+
+    if (patientNumber >= 1 && patientNumber <= count)
+    {
+        double charge = (*patients[patientNumber - 1])[dayNumber - 1];
+
+        cout << "Treatment Charge: Rs. " << charge << endl;
+    }
+    else
+    {
+        cout << "Invalid patient number." << endl;
+    }
+
+    HospitalManager manager;
+    manager.generateReport(patients, count);
+
+    Patient::showTotalPatients();
+
+    for (int i = 0; i < count; i++)
+    {
+        delete patients[i];
+    }
 }
+
 
 int main() {
     int choice = 0;
