@@ -1,9 +1,10 @@
 #include <iostream>
+#include <iomanip>
 #include "Student.h"
 #include "Wallet.h"
+#include "Product.h"
 using namespace std;
 
-// No global variables: each demo creates its own objects locally.
 
 void runQuestion1()
 {
@@ -26,12 +27,12 @@ void runQuestion1()
         double cgpa;
         char name[50];
 
-        cout << "Enter details for Student " << i + 1 << ":" << endl;
+        cout << "Enter details for Student " << i + 1 << " " << endl;
 
         cout << "Student ID ";
         cin >> id;
 
-        cout << "Name: ";
+        cout << "Name ";
         cin >> ws;
         cin.getline(name, 50);
 
@@ -171,10 +172,173 @@ void runQuestion2()
 }
 
 
-void runQuestion3() {
-    cout << "Q3: Inventory Management System - TODO" << endl;
-    // TODO: price-range search, stock update, ResourceManager, operators
+
+void runQuestion3()
+{
+    int count;
+
+    cout << "\nEnter number of products ";
+    cin >> count;
+
+    if (count < 1 || count > 50)
+    {
+        cout << "Invalid number of products" << endl;
+        return;
+    }
+
+    Product* products[50];
+
+    for (int i = 0; i < count; i++)
+    {
+        int id, quantity;
+        char name[50], category[30];
+        double price;
+
+        cout << "Enter details for Product " << i + 1 << endl;
+
+        cout << "Product ID ";
+        cin >> id;
+
+        cin.ignore(1000, '\n');
+
+        cout << "Product Name ";
+        cin.getline(name, 50);
+
+        cout << "Category ";
+        cin.getline(category, 30);
+
+        cout << "Price ";
+        cin >> price;
+
+        cout << "Quantity ";
+        cin >> quantity;
+
+        products[i] = new Product(id, name, category, price, quantity);
+    }
+
+    double minimum, maximum;
+
+    cout << "Enter minimum price ";
+    cin >> minimum;
+
+    cout << "Enter maximum price ";
+    cin >> maximum;
+
+    cout << "Products within the specified price range"
+        << endl;
+
+    for (int i = 0; i < count; i++)
+    {
+        if (products[i]->getPrice() >= minimum &&
+            products[i]->getPrice() <= maximum)
+        {
+            cout << *products[i];
+        }
+    }
+
+    int searchID;
+    bool found = false;
+
+    cout << "Enter Product ID to search ";
+    cin >> searchID;
+
+    for (int i = 0; i < count; i++)
+    {
+        if (products[i]->getProductID() == searchID)
+        {
+            cout << "Product Found" << endl;
+            cout << *products[i];
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Product not found" << endl;
+    }
+
+    int updateID, amount;
+    Product* selectedProduct = nullptr;
+
+    cout << "Updating Stock" << endl;
+
+    cout << "Enter Product ID ";
+    cin >> updateID;
+
+    for (int i = 0; i < count; i++)
+    {
+        if (products[i]->getProductID() == updateID)
+        {
+            selectedProduct = products[i];
+            break;
+        }
+    }
+
+    if (selectedProduct != nullptr)
+    {
+        cout << "Enter quantity to add ";
+        cin >> amount;
+
+        updateProductStock(selectedProduct, amount);
+
+        cout << "Updated Stock" << endl;
+        cout << *selectedProduct;
+    }
+    else
+    {
+        cout << "Product not found" << endl;
+    }
+
+    ResourceManager manager;
+    manager.displayInventory(products, count);
+
+    if (count >= 2)
+    {
+        cout << "Operator Demonstration" << endl;
+
+        if (*products[0] == *products[1])
+        {
+            cout << "Both products have the same ID" << endl;
+        }
+        else
+        {
+            cout << "Products have different IDs" << endl;
+        }
+
+        if (*products[0] > *products[1])
+        {
+            cout << "First product is more expensive" << endl;
+        }
+        else
+        {
+            cout << "Second product is more expensive or prices are equal"
+                << endl;
+        }
+
+        cout << "Combined stock (only if IDs match) "
+            << *products[0] + *products[1] << endl;
+    }
+
+    if (count >= 1)
+    {
+        cout << "Prefix Increment Demonstration" << endl;
+        ++(*products[0]);
+        cout << *products[0];
+
+        cout << "Postfix Increment Demonstration" << endl;
+        (*products[0])++;
+        cout << *products[0];
+    }
+
+    Product::showTotalProducts();
+
+    for (int i = 0; i < count; i++)
+    {
+        delete products[i];
+    }
 }
+
 
 void runQuestion4() {
     cout << "Q4: Hospital Billing System - TODO" << endl;
